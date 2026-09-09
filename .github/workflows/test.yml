@@ -1,0 +1,22 @@
+name: test
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm test
+        env:
+          OCP_BASE_URL: https://dev.api.dfx.swiss/v1
+          OCP_ROUTE: SPAR
